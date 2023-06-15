@@ -235,8 +235,8 @@ class League(iRacingDataObject):
             maximum_roster_count: int = None,
             lowerbound: int = None,
             upperbound: int = None,
-            sort: str = LeagueSort.RELEVANCE.value,
-            order: str = LeagueOrder.ASC.value):
+            sort: LeagueSort = LeagueSort.RELEVANCE,
+            order: LeagueOrder = LeagueOrder.ASC):
         """
         League Directory
 
@@ -276,9 +276,9 @@ class League(iRacingDataObject):
         if upperbound:
             params['upperbound'] = upperbound
         if sort:
-            params['sort'] = sort
+            params['sort'] = sort.value
         if order:
-            params['order'] = order
+            params['order'] = order.value
         request = requests.Request('GET', DIRECTORY_URL, params=params)
         return self.send(request).json()
 

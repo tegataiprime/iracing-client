@@ -56,7 +56,7 @@ def test_get_chart_data_by_custid(member_instance):
    assert chart_data
    assert isinstance(chart_data, dict)
    assert chart_data['success'] == True
-   assert chart_data['chart_data'][0]['cust_id'] == 530595
+   assert chart_data['cust_id'] == 530595
 
 
 def test_my_info(member_instance):

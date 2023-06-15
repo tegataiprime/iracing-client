@@ -76,7 +76,7 @@ class Member(iRacingDataObject):
         cust_id is optional and must be an integer.
         """
     
-        params = {'category_id': category, 'chart_type': chart_type}
+        params = {'category_id': category.value, 'chart_type': chart_type.value}
         if cust_id != 0:
             params['cust_id'] = cust_id
 
