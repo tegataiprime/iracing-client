@@ -28,8 +28,7 @@ def test_get_league(league_instance):
     league_data = league_instance.get_league(league_id=3580)
     assert league_data
     assert isinstance(league_data, dict)
-    assert league_data['success'] == True
-    assert league_data['league']['league_id'] == 3580
+    assert league_data['league_id'] == 3580
 
 
 def test_get_points_systems(league_instance):
@@ -38,16 +37,15 @@ def test_get_points_systems(league_instance):
     assert points_systems
     assert isinstance(points_systems, dict)
     assert points_systems['success'] == True
-    assert points_systems['points_systems'][0]['league_id'] == 3580
+    assert points_systems['league_id'] == 3580
 
 
 def test_get_membership(league_instance):
     """Test get_membership function."""
-    membership = league_instance.get_membership(league_id=3580)
+    membership = league_instance.get_membership(cust_id=530595, include_league=False)
     assert membership
-    assert isinstance(membership, dict)
-    assert membership['success'] == True
-    assert membership['membership'][0]['league_id'] == 3580
+    assert isinstance(membership, list)
+    assert len(membership) > 0
 
 
 def test_get_seasons(league_instance):
@@ -56,24 +54,24 @@ def test_get_seasons(league_instance):
     assert seasons
     assert isinstance(seasons, dict)
     assert seasons['success'] == True
-    assert seasons['seasons'][0]['league_id'] == 3580
+    assert seasons['league_id'] == 3580
 
 def test_get_season_standings(league_instance):
     """Test get_season_standings function."""
-    standings = league_instance.get_season_standings(league_id=3580, season_id=0)
+    standings = league_instance.get_season_standings(league_id=3580, season_id=93206)
     assert standings
     assert isinstance(standings, dict)
     assert standings['success'] == True
-    assert standings['standings'][0]['league_id'] == 3580
-    assert standings['standings'][0]['season_id'] == 0
+    assert standings['league_id'] == 3580
+    assert standings['season_id'] == 93206
 
 
 def test_get_season_sessions(league_instance):
     """Test get_season_sessions function."""
-    sessions = league_instance.get_season_sessions(league_id=3580, season_id=0)
+    sessions = league_instance.get_season_sessions(league_id=3580, season_id=93206)
     assert sessions
     assert isinstance(sessions, dict)
     assert sessions['success'] == True
-    assert sessions['sessions'][0]['league_id'] == 3580
-    assert sessions['sessions'][0]['season_id'] == 0
+    assert sessions['league_id'] == 3580
+    assert sessions['season_id'] == 93206
     

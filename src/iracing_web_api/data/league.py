@@ -235,8 +235,8 @@ class League(iRacingDataObject):
             maximum_roster_count: int = None,
             lowerbound: int = None,
             upperbound: int = None,
-            sort: str = LeagueSort.RELEVANCE,
-            order: str = LeagueOrder.ASC):
+            sort: str = LeagueSort.RELEVANCE.value,
+            order: str = LeagueOrder.ASC.value):
         """
         League Directory
 
