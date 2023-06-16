@@ -170,8 +170,8 @@ Refer to https://members-ng.iracing.com/data/doc for more information.
 from abc import  abstractmethod
 from enum import Enum
 import requests
-import iracing_web_api.data.common as common
-from iracing_web_api.data.common import iRacingDataObject, iRacingRequestException
+import iracing_data_client.data.common as common
+from iracing_data_client.data.common import iRacingDataObject, iRacingRequestException
 
 CUST_LEAGUE_SESSIONS_URL = common.BASE_URL + "league/cust_league_sessions"
 DIRECTORY_URL = common.BASE_URL + "league/directory"

@@ -11,9 +11,9 @@ and then access the property again.
 Refer to https://members-ng.iracing.com/data/doc for more information.
 """
 import requests
-from iracing_web_api.data.constants import Category, ChartType
-import iracing_web_api.data.common as common
-from iracing_web_api.data.common import iRacingDataObject
+from iracing_data_client.data.constants import Category, ChartType
+import iracing_data_client.data.common as common
+from iracing_data_client.data.common import iRacingDataObject
 
 MEMBER_URL = common.BASE_URL + 'member/get'
 AWARDS_URL = common.BASE_URL + 'member/awards'

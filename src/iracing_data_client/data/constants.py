@@ -8,8 +8,8 @@ Refer to https://members-ng.iracing.com/data/doc for more information.
 """
 import requests
 from enum import Enum
-import iracing_web_api.data.common as common
-from iracing_web_api.data.common import iRacingDataObject
+import iracing_data_client.data.common as common
+from iracing_data_client.data.common import iRacingDataObject
 
 # URLs for iRacing Constants.
 CATEGORIES_URL = common.BASE_URL + 'constants/categories'
