@@ -1,5 +1,5 @@
 """Test constants module."""
-from iracing_web_api.data.constants import Constants
+from iracing_data_client.data.constants import Constants
 
 def test_get_categories(http_session):
     """Test get_categories function."""

@@ -1,7 +1,7 @@
 """Test Member Module."""
 import pytest
-from iracing_web_api.data.member import Member
-from iracing_web_api.data.constants import Category, ChartType
+from iracing_data_client.data.member import Member
+from iracing_data_client.data.constants import Category, ChartType
 
 
 @pytest.fixture(scope="module")
