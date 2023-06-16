@@ -3,6 +3,7 @@ A Python Client Library for working with iRacing Data API.
 
 This library provides communiction & error handling with the iRacing Data API.
 
+
 ## Quick Start
 
 JSON formatted data returned by iRacing is deserialized as either a `list` or `dict` using [`json.loads`](https://docs.python.org/3/library/json.html)
@@ -56,25 +57,32 @@ We have provided a VSCode devcontainer to make getting started as simple as poss
 
 The python dependancies and packaging is managed using [Poetry](https://python-poetry.org/).
 
+Tests are managed and executed using [pytest](https://docs.pytest.org/).
+
 ### Unit Tests
 
-Unit Tests mock interations with the iRacing Data API and can be executed offline.  Create unit tests to exercise logic and error handling.
+Unit Tests mock interactions with the iRacing Data API and can be executed offline.  Create unit tests to exercise logic and error handling.
+
+Running pytest from the VSCode Terminal:
+```bash
+poetry run pytest tests/unit/
+```
 
 ### Integration Tests
 
-Integration Tests will connect to iRacing and perform a shake down of the base data classes using live data.
+Integration Tests will connect to the iRacing Service and perform a shake down of the base data classes using live data.
 
-When testing locally, provide the following values in a .env file in the root of the project.
+When testing locally, provide the following values in a `.env` file in the root of the project.
 
-```
+```bash
 IRACING_USERNAME=<your email address>
 IRACING_PASSWORD=<your iRacing password>
 IRACING_MEMBER_ID=<your iRacing Member Id>
 ```
 
 
-Running pytest from the command line:
-```
+Running pytest from the command line (integration tests only):
+```bash
 poetry run pytest tests/integration
 ```
 
