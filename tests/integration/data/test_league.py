@@ -40,9 +40,9 @@ def test_get_points_systems(league_instance):
     assert points_systems['league_id'] == 3580
 
 
-def test_get_membership(league_instance):
+def test_get_membership(league_instance, iracing_member_id):
     """Test get_membership function."""
-    membership = league_instance.get_membership(cust_id=530595, include_league=False)
+    membership = league_instance.get_membership(cust_id=iracing_member_id, include_league=False)
     assert membership
     assert isinstance(membership, list)
     assert len(membership) > 0
