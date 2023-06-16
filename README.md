@@ -1,9 +1,80 @@
-# iracing-web-api
-A Python Library for working with iRacing Web RESTful API
+# iracing-data-client
+A Python Client Library for working with iRacing Data API.
 
-[iRacing Web API Documentation](https://members-ng.iracing.com/data/doc)
+This library provides communiction & error handling with the iRacing Data API.
+
+## Quick Start
+
+JSON formatted data returned by iRacing is deserialized as either a `list` or `dict` using [`json.loads`](https://docs.python.org/3/library/json.html)
+
+```python
+import iracing_data_client.auth as auth
+from iracing_data_client.data.constants import Constants
+from iracing_data_client.data.member import Member
+from iracing_data_client.data.league import League
+
+# Authenticate with iRacing
+iracing_username = os.environ.ge('IRACING_USERNAME')
+iracing_password = os.environ.ge('IRACING_PASSWORD')
+
+http_session = auth.login(iracing_username, iracing_password)
+
+
+# iRacing Constants
+constants = Constants(http_session)
+print(constants.categories)
+print(constants.divisions)
+print(constants.event_types)
+
+
+# My iRacing Member Info
+member = Member(http_session)
+print(member.get_profile())
+
+
+# My iRacing League Directory
+league = League(http_session)
+print(league_instance.get_directory())
+```
+
+
+
+
+## Useful Information
+
+[iRacing Data API Documentation](https://members-ng.iracing.com/data/doc)
 
 [iRacing Forums Data API Discussion](https://forums.iracing.com/discussion/15068/general-availability-of-data-api/p1)
 
 [iRacing Auth Portal](https://members-ng.iracing.com/auth/)
+
+## Colaborating
+
+Feel free to fork this repo and commit back via a Pull Request.
+
+We have provided a VSCode devcontainer to make getting started as simple as possible.  Use your own local machine or a GitHub CodeSpace.
+
+The python dependancies and packaging is managed using [Poetry](https://python-poetry.org/).
+
+### Unit Tests
+
+Unit Tests mock interations with the iRacing Data API and can be executed offline.  Create unit tests to exercise logic and error handling.
+
+### Integration Tests
+
+Integration Tests will connect to iRacing and perform a shake down of the base data classes using live data.
+
+When testing locally, provide the following values in a .env file in the root of the project.
+
+```
+IRACING_USERNAME=<your email address>
+IRACING_PASSWORD=<your iRacing password>
+IRACING_MEMBER_ID=<your iRacing Member Id>
+```
+
+
+Running pytest from the command line:
+```
+poetry run pytest tests/integration
+```
 
