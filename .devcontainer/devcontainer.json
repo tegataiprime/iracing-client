@@ -1,0 +1,41 @@
+{
+	"name": "poetry3-poetry-pyenv",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+
+	// 👇 Features to add to the Dev Container. More info: https://containers.dev/implementors/features.
+	// "features": {},
+
+	// 👇 Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// 👇 Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "",
+
+	// 👇 Configure tool-specific properties.
+	"customizations": {
+        "vscode": {
+            "extensions":[
+				"ms-python.python",
+				"njpwerner.autodocstring",
+				"GitHub.copilot",
+				"ms-vscode-remote.remote-containers",
+				"ms-azuretools.vscode-docker",
+				"GitHub.vscode-pull-request-github",
+				"GitHub.codespaces"
+			],
+			"settings": {
+				"python.linting.pylintEnabled": true,
+				"python.linting.pylintArgs": ["--max-line-length=88"],
+				"python.formatting.provider": "black",
+				"python.testing.autoTestDiscoverOnSaveEnabled": true,
+				"python.testing.pytestEnabled": true,
+				"python.testing.pytestArgs": [
+					"-v"
+				  ]
+			}
+            }
+        },
+	"postStartCommand": "poetry install && poetry self add poetry-dotenv-plugin"
+}
