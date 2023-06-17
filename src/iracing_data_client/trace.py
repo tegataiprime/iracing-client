@@ -5,6 +5,7 @@ import http.client
 logging.basicConfig(level=logging.DEBUG)
 httpclient_logger = logging.getLogger("http.client")
 
+
 def httpclient_logging_patch(level=logging.DEBUG):
     """Enable HTTPConnection debug logging to the logging framework"""
 

@@ -77,32 +77,35 @@ import requests
 
 class AuthenticationException(Exception):
     """Raised when login fails."""
+
     pass
 
 
-AUTH_URL = 'https://members-ng.iracing.com/auth'
+AUTH_URL = "https://members-ng.iracing.com/auth"
 
 
 def login(username: str, password: str) -> requests.Session:
     """Login to iRacing and return a requests.Session object."""
     credentialHash = encode_pw(username, password)
-    payload = {'email': username, 'password': credentialHash}
+    payload = {"email": username, "password": credentialHash}
     http_session = requests.Session()
     try:
         response = http_session.post(AUTH_URL, json=payload, timeout=10.0)
-    except requests.Timeout:
-        raise AuthenticationException('Login timed out')
-    except  requests.ConnectionError:
-        raise AuthenticationException('Login failed due to connection error')
+    except requests.Timeout as timeout:
+        raise AuthenticationException("Login timed out") from timeout
+    except requests.ConnectionError as connection_error:
+        raise AuthenticationException("Login failed due to connection error") from connection_error
     else:
-        if response.status_code == requests.codes.ok:
+        if response.status_code == requests.codes.ok: # pylint: disable=no-member
             return http_session
         else:
-            raise AuthenticationException(f'Login failed with status code {response.status_code}')
+            raise AuthenticationException(
+                f"Login failed with status code {response.status_code}"
+            )
 
 
 def encode_pw(username: str, password: str) -> str:
     """Encode the password to iRacing's specification."""
-    initialHash = hashlib.sha256((password + username.lower()).encode('utf-8')).digest()
-    hashInBase64 = base64.b64encode(initialHash).decode('utf-8')
+    initialHash = hashlib.sha256((password + username.lower()).encode("utf-8")).digest()
+    hashInBase64 = base64.b64encode(initialHash).decode("utf-8")
     return hashInBase64
