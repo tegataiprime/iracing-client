@@ -59,6 +59,10 @@ The python dependancies and packaging is managed using [Poetry](https://python-p
 
 Tests are managed and executed using [pytest](https://docs.pytest.org/).
 
+Code formatting is performed by [black](https://pypi.org/project/black/).
+
+Linting is performed by [pylint](https://pypi.org/project/pylint/).
+
 ### Unit Tests
 
 Unit Tests mock interactions with the iRacing Data API and can be executed offline.  Create unit tests to exercise logic and error handling.
