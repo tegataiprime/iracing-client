@@ -59,13 +59,7 @@ jobs:
       - name: Run Unit Tests
         run: |
           source .venv/bin/activate
-          poetry run pytest tests/unit
-          RESULT=$?
-          echo "RESULT: $RESULT"
-          if [ $RESULT -eq 5 ]; then
-            echo "No tests to run."
-            exit 0
-          fi
+          poetry run pytest tests/unit || if [ $? -eq 5 ]; then exit 0; fi
       - name: Run Integration Tests
         env:
           IRACING_USERNAME: ${{ secrets.IRACING_USERNAME }}
@@ -73,8 +67,4 @@ jobs:
           IRACING_MEMBER_ID: ${{ secrets.IRACING_MEMBER_ID }}
         run: |
           source .venv/bin/activate
-          poetry run pytest tests/integration
-          RESULT=$?
-          if [ $RESULT -eq 5 ]; then
-            exit 0
-          fi
+          poetry run pytest tests/integration || if [ $? -eq 5 ]; then exit 0; fi
