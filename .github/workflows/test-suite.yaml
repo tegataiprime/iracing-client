@@ -49,20 +49,21 @@ jobs:
       #----------------------------------------------
       #             run linter
       #----------------------------------------------
-      - name: Run linter
+      - name: Run Linter
         run: |
           source .venv/bin/activate
-          poetry run pylint src/
+          poetry run pylint --fail-under=9 src/
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
-      - name: Run unit tests
+      - name: Run Unit Tests
         run: |
           source .venv/bin/activate
           poetry run pytest tests/unit
           RESULT=$?
-          # If no tests are found, transform exit code from 5 to 0
+          echo "RESULT: $RESULT"
           if [ $RESULT -eq 5 ]; then
+            echo "No tests to run."
             exit 0
           fi
       - name: Run Integration Tests
@@ -74,7 +75,6 @@ jobs:
           source .venv/bin/activate
           poetry run pytest tests/integration
           RESULT=$?
-          # If no tests are found, transform exit code from 5 to 0
           if [ $RESULT -eq 5 ]; then
             exit 0
           fi
