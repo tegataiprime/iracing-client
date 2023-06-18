@@ -60,6 +60,11 @@ jobs:
         run: |
           source .venv/bin/activate
           poetry run pytest tests/unit
+          RESULT=$?
+          # If no tests are found, transform exit code from 5 to 0
+          if [ $RESULT -eq 5 ]; then
+            exit 0
+          fi
       - name: Run Integration Tests
         env:
           IRACING_USERNAME: ${{ secrets.IRACING_USERNAME }}
@@ -68,3 +73,8 @@ jobs:
         run: |
           source .venv/bin/activate
           poetry run pytest tests/integration
+          RESULT=$?
+          # If no tests are found, transform exit code from 5 to 0
+          if [ $RESULT -eq 5 ]; then
+            exit 0
+          fi
