@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "iracing-data-api"
+name = "iracing-client"
 version = "0.1.0"
 description = ""
 authors = ["James Carter <tegatai@gmail.com>"]
 readme = "README.md"
-packages = [{include = "src/iracing_data_client"}]
+packages = [{include = "src/iracing_client"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"

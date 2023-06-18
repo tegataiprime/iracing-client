@@ -69,7 +69,7 @@ A sample curl script is shown below.
 The cookie-jar.txt stores the cookies, including the authtoken set during login. You may continue to use the cookie-jar.txt on each 
 subsequent request without needing to re-auth and the authtoken will be automatically refreshed as needed. 
 Please do not re-auth with each request. We see that on a number of the current scrapers hitting the membersite.
-"""
+""" # pylint: disable=line-too-long
 import hashlib
 import base64
 import requests
@@ -78,16 +78,14 @@ import requests
 class AuthenticationException(Exception):
     """Raised when login fails."""
 
-    pass
-
 
 AUTH_URL = "https://members-ng.iracing.com/auth"
 
 
 def login(username: str, password: str) -> requests.Session:
     """Login to iRacing and return a requests.Session object."""
-    credentialHash = encode_pw(username, password)
-    payload = {"email": username, "password": credentialHash}
+    credential_hash = encode_pw(username, password)
+    payload = {"email": username, "password": credential_hash}
     http_session = requests.Session()
     try:
         response = http_session.post(AUTH_URL, json=payload, timeout=10.0)
@@ -95,17 +93,17 @@ def login(username: str, password: str) -> requests.Session:
         raise AuthenticationException("Login timed out") from timeout
     except requests.ConnectionError as connection_error:
         raise AuthenticationException("Login failed due to connection error") from connection_error
-    else:
-        if response.status_code == requests.codes.ok: # pylint: disable=no-member
-            return http_session
-        else:
-            raise AuthenticationException(
-                f"Login failed with status code {response.status_code}"
-            )
+
+    if response.status_code == requests.codes.ok: # pylint: disable=no-member
+        return http_session
+
+    raise AuthenticationException(
+        f"Login failed with status code {response.status_code}"
+    )
 
 
 def encode_pw(username: str, password: str) -> str:
     """Encode the password to iRacing's specification."""
-    initialHash = hashlib.sha256((password + username.lower()).encode("utf-8")).digest()
-    hashInBase64 = base64.b64encode(initialHash).decode("utf-8")
-    return hashInBase64
+    initial_hash = hashlib.sha256((password + username.lower()).encode("utf-8")).digest()
+    hash_in_base64 = base64.b64encode(initial_hash).decode("utf-8")
+    return hash_in_base64

@@ -42,21 +42,20 @@ class IRacingDataObject(ABC):
             raise IRacingRequestException(
                 f"{self.name} failed due to connection error"
             ) from conection_error
-        else:
-            if (
-                response.status_code == requests.codes.ok  # pylint: disable=no-member
-                and response.cookies["authtoken_members"]
-            ):
-                data = response.json()
-                if isinstance(data, dict) and data["link"]:
-                    link_request = requests.Request("GET", data["link"])
-                    return self.follow_link(link_request)
-                else:
-                    return response
-            else:
-                raise IRacingRequestException(
-                    f"{self.name} failed with status code {response.status_code}"
-                )
+
+        if (
+            response.status_code == requests.codes.ok  # pylint: disable=no-member
+            and response.cookies["authtoken_members"]
+        ):
+            data = response.json()
+            if isinstance(data, dict) and data["link"]:
+                link_request = requests.Request("GET", data["link"])
+                return self.follow_link(link_request)
+            return response
+
+        raise IRacingRequestException(
+            f"{self.name} failed with status code {response.status_code}"
+        )
 
     def follow_link(self, link_request: requests.Request) -> requests.Response:
         """Follow the link to the data that we requested."""
@@ -69,10 +68,10 @@ class IRacingDataObject(ABC):
             raise IRacingRequestException(
                 f"{self.name} failed due to connection error"
             ) from conection_error
-        else:
-            if response.status_code == requests.codes.ok:  # pylint: disable=no-member
-                return response
-            else:
-                raise IRacingRequestException(
-                    f"{self.name} failed with status code {response.status_code}"
-                )
+
+        if response.status_code == requests.codes.ok:  # pylint: disable=no-member
+            return response
+
+        raise IRacingRequestException(
+            f"{self.name} failed with status code {response.status_code}"
+        )

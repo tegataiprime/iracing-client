@@ -9,11 +9,11 @@ first time a property is accessed.  To refresh the data, call the clear_cache() 
 and then access the property again.
 
 Refer to https://members-ng.iracing.com/data/doc for more information.
-"""
+""" # pylint: disable=line-too-long
 import requests
-from iracing_data_client.data.constants import Category, ChartType
-import iracing_data_client.data.common as common
-from iracing_data_client.data.common import IRacingDataObject
+from iracing_client.data.constants import Category, ChartType
+from iracing_client.data import common
+from iracing_client.data.common import IRacingDataObject
 
 MEMBER_URL = common.BASE_URL + "member/get"
 AWARDS_URL = common.BASE_URL + "member/awards"
