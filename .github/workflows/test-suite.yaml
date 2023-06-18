@@ -1,4 +1,4 @@
-name: Test Suite
+name: test-suite
 
 on: [workflow_dispatch, pull_request]
 
