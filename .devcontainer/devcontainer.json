@@ -24,7 +24,8 @@
 				"ms-azuretools.vscode-docker",
 				"GitHub.vscode-pull-request-github",
 				"GitHub.codespaces",
-				"ms-python.pylint"
+				"ms-python.pylint",
+				"SonarSource.sonarlint-vscode"
 			],
 			"settings": {
 				"python.linting.pylintEnabled": true,
