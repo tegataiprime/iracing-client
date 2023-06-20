@@ -5,8 +5,8 @@ Refer to https://members-ng.iracing.com/data/doc for more information.
 """
 from enum import Enum
 import requests
-import iracing_data_client.data.common as common
-from iracing_data_client.data.common import IRacingDataObject
+from iracing_client.data import common
+from iracing_client.data.common import IRacingDataObject
 
 CUST_LEAGUE_SESSIONS_URL = common.BASE_URL + "league/cust_league_sessions"
 DIRECTORY_URL = common.BASE_URL + "league/directory"
@@ -75,7 +75,7 @@ class League(IRacingDataObject):
         upperbound: int = None,
         sort: LeagueSort = LeagueSort.RELEVANCE,
         order: LeagueOrder = LeagueOrder.ASC,
-    ):
+    ): # pylint: disable=too-many-arguments
         """Lookup the directory of leagues.
 
         Args:

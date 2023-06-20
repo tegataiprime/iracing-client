@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "iracing-data-api"
+name = "iracing-client"
 version = "0.1.0"
 description = ""
 authors = ["James Carter <tegatai@gmail.com>"]
 readme = "README.md"
-packages = [{include = "src/iracing_data_client"}]
+packages = [{include = "src/iracing_client"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -14,6 +14,8 @@ requests = "^2.31.0"
 pytest = "^7.3.2"
 pylint = "^2.17.4"
 black = "^23.3.0"
+coverage = "^7.2.7"
+pytest-cov = "^4.1.0"
 
 [tool.pytest.ini_options]
 pythonpath = [

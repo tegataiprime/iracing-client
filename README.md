@@ -1,3 +1,9 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tegataiprime_iracing-client&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=tegataiprime_iracing-client)
+
+[![CodeQL](https://github.com/tegataiprime/iracing-client/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/tegataiprime/iracing-client/actions/workflows/github-code-scanning/codeql)
+
+[![Test Suite](https://github.com/tegataiprime/iracing-client/actions/workflows/test-suite.yaml/badge.svg)](https://github.com/tegataiprime/iracing-client/actions/workflows/test-suite.yaml)
+
 # iracing-data-client
 A Python Client Library for working with iRacing Data API.
 

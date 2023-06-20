@@ -1,7 +1,7 @@
 """Pytest configuration for integration tests."""
 import pytest
 import os
-import iracing_data_client.auth as auth
+import iracing_client.auth as auth
 
 
 @pytest.fixture(scope="session")

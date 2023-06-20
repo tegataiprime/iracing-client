@@ -1,6 +1,6 @@
 """Test League Module."""
 import pytest
-from iracing_data_client.data.league import League
+from iracing_client.data.league import League
 
 @pytest.fixture(scope="module")
 def league_instance(http_session):
