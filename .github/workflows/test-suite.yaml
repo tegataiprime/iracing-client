@@ -74,7 +74,7 @@ jobs:
           IRACING_MEMBER_ID: ${{ secrets.IRACING_MEMBER_ID }}
         run: |
           source .venv/bin/activate
-          poetry run pytest --cov-report term --cov-report xml:coverage.xml --cov-append tests/integration || if [ $? -eq 5 ]; then exit 0; fi
+          poetry run pytest --cov-report term --cov-report xml:coverage.xml --cov=iracing_client --cov-append tests/integration || if [ $? -eq 5 ]; then exit 0; fi
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
