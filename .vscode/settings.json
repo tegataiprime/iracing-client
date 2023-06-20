@@ -1,6 +1,10 @@
 {
     "[python]": {
-        "editor.defaultFormatter": "ms-python.python"
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
+    "sonarlint.connectedMode.project": {
+        "connectionId": "tegataiprime_iracing-client",
+        "projectKey": "tegataiprime_iracing-client"
     },
     "python.formatting.provider": "none"
 }

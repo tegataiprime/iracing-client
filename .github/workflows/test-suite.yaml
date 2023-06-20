@@ -1,6 +1,7 @@
 name: Test Suite
 
 on:
+  workflow_dispatch:
   # Trigger analysis when pushing in master or pull requests, and when creating
   # a pull request.
   push:
@@ -23,6 +24,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+
       #----------------------------------------------
       #  -----  install & configure poetry  -----
       #----------------------------------------------
@@ -42,17 +44,20 @@ jobs:
         with:
           path: .venv
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
       #----------------------------------------------
       # install dependencies if cache does not exist
       #----------------------------------------------
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
+
       #----------------------------------------------
       # install your root project, if required
       #----------------------------------------------
       - name: Install project
         run: poetry install --no-interaction
+
       #----------------------------------------------
       #             run linter
       #----------------------------------------------
@@ -60,6 +65,7 @@ jobs:
         run: |
           source .venv/bin/activate
           poetry run pylint --fail-under=9 src/
+
       #----------------------------------------------
       #              run test suite
       #----------------------------------------------
@@ -67,6 +73,7 @@ jobs:
         run: |
           source .venv/bin/activate
           poetry run pytest --cov-report term --cov-report xml:coverage.xml --cov=iracing_client tests/unit || if [ $? -eq 5 ]; then exit 0; fi
+
       - name: Run Integration Tests
         env:
           IRACING_USERNAME: ${{ secrets.IRACING_USERNAME }}
@@ -75,20 +82,23 @@ jobs:
         run: |
           source .venv/bin/activate
           poetry run pytest --cov-report term --cov-report xml:coverage.xml --cov=iracing_client --cov-append tests/integration || if [ $? -eq 5 ]; then exit 0; fi
+
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
           path: coverage.xml
           retention-days: 7
+
       #----------------------------------------------
-      #              run coverage
+      #              perform static analysis
       #----------------------------------------------
       - name: SonarCloud Scan
         uses: sonarsource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
       #----------------------------------------------
       #              check quality gate
       #----------------------------------------------
