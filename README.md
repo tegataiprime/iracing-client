@@ -4,6 +4,8 @@
 
 [![Test Suite](https://github.com/tegataiprime/iracing-client/actions/workflows/test-suite.yaml/badge.svg)](https://github.com/tegataiprime/iracing-client/actions/workflows/test-suite.yaml)
 
+[![Release](https://github.com/tegataiprime/iracing-client/actions/workflows/release.yaml/badge.svg)](https://github.com/tegataiprime/iracing-client/actions/workflows/release.yaml)
+
 # iracing-data-client
 A Python Client Library for working with iRacing Data API.
 
