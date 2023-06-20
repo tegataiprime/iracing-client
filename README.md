@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tegataiprime_iracing-client&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=tegataiprime_iracing-client)
+
 # iracing-data-client
 A Python Client Library for working with iRacing Data API.
 
