@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "iracing-client"
-version = "0.1.1"
+version = "0.1.1-alpha"
 description = ""
 authors = ["James Carter <tegatai@gmail.com>"]
 readme = "README.md"
