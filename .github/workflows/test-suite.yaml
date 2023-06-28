@@ -24,7 +24,7 @@ jobs:
       # Initilize Build Environment
       #----------------------------------------------
       - name: Initialize Build Environment
-        uses: ./github/actions/poetry-initialize-action
+        uses: ./.github/actions/poetry-initialize-action
         with:
           python-version: '3.10'
 
