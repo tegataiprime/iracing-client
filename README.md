@@ -6,7 +6,7 @@
 
 [![Release](https://github.com/tegataiprime/iracing-client/actions/workflows/release.yaml/badge.svg)](https://github.com/tegataiprime/iracing-client/actions/workflows/release.yaml)
 
-# iracing-data-client
+# iracing-client
 A Python Client Library for working with iRacing Data API.
 
 This library provides communiction & error handling with the iRacing Data API.
@@ -17,10 +17,10 @@ This library provides communiction & error handling with the iRacing Data API.
 JSON formatted data returned by iRacing is deserialized as either a `list` or `dict` using [`json.loads`](https://docs.python.org/3/library/json.html)
 
 ```python
-import iracing_data_client.auth as auth
-from iracing_data_client.data.constants import Constants
-from iracing_data_client.data.member import Member
-from iracing_data_client.data.league import League
+import iracing_client.auth as auth
+from iracing_client.data.constants import Constants
+from iracing_client.data.member import Member
+from iracing_client.data.league import League
 
 # Authenticate with iRacing
 iracing_username = os.environ.ge('IRACING_USERNAME')
