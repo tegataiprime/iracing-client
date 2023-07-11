@@ -17,6 +17,9 @@ updates:
       dev-dependencies:
         patterns:
           - "*"
+        exclude-patterns:
+          - "python"
+          - "requests"
 
   - package-ecosystem: "github-actions"
     directory: "/"
