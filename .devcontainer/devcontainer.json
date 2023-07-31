@@ -25,7 +25,8 @@
 				"GitHub.vscode-pull-request-github",
 				"GitHub.codespaces",
 				"ms-python.pylint",
-				"SonarSource.sonarlint-vscode"
+				"SonarSource.sonarlint-vscode",
+				"GitHub.copilot-chat"
 			],
 			"settings": {
 				"python.linting.pylintEnabled": true,
