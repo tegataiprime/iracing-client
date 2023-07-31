@@ -31,6 +31,14 @@ class ChartType(Enum):
     LICENSE_SR = 3
 
 
+class EventType(Enum):
+    """An enumerated class representing iRacing Event Types."""
+
+    PRACTICE = 2
+    QUALIFY = 3
+    TIME_TRIAL = 4
+    RACE = 5
+
 class Constants(IRacingDataObject):
     """A class representing iRacing Constants."""
 
