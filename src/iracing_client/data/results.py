@@ -221,6 +221,7 @@
 import requests
 from iracing_client.data import common
 from iracing_client.data.common import IRacingDataObject
+from iracing_client.data.constants import EventType, Category
 
 RESULTS_URL = common.BASE_URL + "/results/get"
 EVENT_LOG_URL = common.BASE_URL + "/results/event_log"
@@ -315,7 +316,7 @@ class Results(IRacingDataObject):
         league_season_id: int = None,
         car_id: int = None,
         track_id: int = None,
-        category_ids: list = None,
+        category_ids: List[Category] = None,
     ):
         """
         Hosted and league sessions.
@@ -369,100 +370,102 @@ class Results(IRacingDataObject):
         if category_ids:
             # Convert category_ids to a comma-separated string.
             str_category_ids = ",".join(
-                str(category_id) for category_id in category_ids
+                str(category_id.value) for category_id in category_ids
             )
             params["category_ids"] = str_category_ids
         request = requests.Request("GET", SEARCH_HOSTED_URL, params=params)
         return self.send(request).json()
 
-    def search_series(
-        self,
-        season_year: int = None,
-        season_quarter: int = None,
-        start_range_begin: str = None,
-        start_range_end: str = None,
-        finish_range_begin: str = None,
-        finish_range_end: str = None,
-        cust_id: int = None,
-        team_id: int = None,
-        series_id: int = None,
-        race_week_num: int = None,
-        official_only: bool = None,
-        event_types: list = None,
-        category_ids: list = None,
-    ):
-        """
-        Official series.
-        Maximum time frame of 90 days.
-        Results split into one or more files with chunks of results.
-        For scraping results the most effective approach is to keep track of the maximum end_time found during a search then make the subsequent call using that date/time as the finish_range_begin and skip any subsessions that are duplicated.
-        Results are ordered by subsessionid which is a proxy for start time but groups together multiple splits of a series when multiple series launch sessions at the same time. Requires at least one of: season_year and season_quarter, start_range_begin, finish_range_begin.
 
-        Args:
-            season_year (int, optional): Required when using season_quarter. Defaults to None.
-            season_quarter (int, optional): Required when using season_year. Defaults to None.
-            start_range_begin (str, optional): Session start times. ISO-8601 UTC time zero offset: \"2022-04-01T15:45Z\". Defaults to None.
-            start_range_end (str, optional): ISO-8601 UTC time zero offset: \"2022-04-01T15:45Z\". Exclusive. May be omitted if start_range_begin is less than 90 days in the past. Defaults to None.
-            finish_range_begin (str, optional): Session finish times. ISO-8601 UTC time zero offset: \"2022-04-01T15:45Z\". Defaults to None.
-            finish_range_end (str, optional): _description_. Defaults to None.
-            cust_id (int, optional): ISO-8601 UTC time zero offset: \"2022-04-01T15:45Z\". Exclusive. May be omitted if finish_range_begin is less than 90 days in the past. Defaults to None.
-            team_id (int, optional): Include only sessions in which this customer participated. Ignored if team_id is supplied. Defaults to None.
-            series_id (int, optional): Include only sessions in which this team participated. Takes priority over cust_id if both are supplied. Defaults to None.
-            race_week_num (int, optional): Include only sessions for series with this ID. Defaults to None.
-            official_only (bool, optional): Include only sessions with this race week number. Defaults to None.
-            event_types (list, optional): If true, include only sessions earning championship points. Defaults to all. Defaults to None.
-            category_ids (list, optional): Types of events to include in the search. Defaults to all. ?event_types=2,3,4,5. Defaults to None.
-        """
-        params = {}
-        if season_year:
-            params["season_year"] = season_year
-        if season_quarter:
-            params["season_quarter"] = season_quarter
-        if start_range_begin:
-            params["start_range_begin"] = start_range_begin
-        if start_range_end:
-            params["start_range_end"] = start_range_end
-        if finish_range_begin:
-            params["finish_range_begin"] = finish_range_begin
-        if finish_range_end:
-            params["finish_range_end"] = finish_range_end
-        if cust_id:
-            params["cust_id"] = cust_id
-        if team_id:
-            params["team_id"] = team_id
-        if series_id:
-            params["series_id"] = series_id
-        if race_week_num:
-            params["race_week_num"] = race_week_num
-        if official_only:
-            params["official_only"] = official_only
-        if event_types:
-            # Convert event_types to a comma-separated string.
-            str_event_types = ",".join(str(event_type) for event_type in event_types)
-            params["event_types"] = str_event_types
-        if category_ids:
-            # Convert category_ids to a comma-separated string.
-            str_category_ids = ",".join(
-                str(category_id) for category_id in category_ids
-            )
-            params["category_ids"] = str_category_ids
-        request = requests.Request("GET", SEARCH_SERIES_URL, params=params)
-        return self.send(request).json()
+def search_series(
+    self,
+    season_year: int = None,
+    season_quarter: int = None,
+    start_range_begin: str = None,
+    start_range_end: str = None,
+    finish_range_begin: str = None,
+    finish_range_end: str = None,
+    cust_id: int = None,
+    team_id: int = None,
+    series_id: int = None,
+    race_week_num: int = None,
+    official_only: bool = None,
+    event_types: List[EventType] = None,
+    category_ids: List[Category] = None,
+):  # sonarlint: disable=too-many-arguments
+    """
+    Official series.
+    Maximum time frame of 90 days.
+    Results split into one or more files with chunks of results.
+    For scraping results the most effective approach is to keep track of the maximum end_time found during a search then make the subsequent call using that date/time as the finish_range_begin and skip any subsessions that are duplicated.
+    Results are ordered by subsessionid which is a proxy for start time but groups together multiple splits of a series when multiple series launch sessions at the same time. Requires at least one of: season_year and season_quarter, start_range_begin, finish_range_begin.
 
-    def get_season_results(
-        self, season_id: int, event_type: int = None, race_week_num: int = None
-    ):
-        """Fetch Results for a Season
+    Args:
+        season_year (int, optional): Required when using season_quarter. Defaults to None.
+        season_quarter (int, optional): Required when using season_year. Defaults to None.
+        start_range_begin (str, optional): Session start times. ISO-8601 UTC time zero offset: \"2022-04-01T15:45Z\". Defaults to None.
+        start_range_end (str, optional): ISO-8601 UTC time zero offset: \"2022-04-01T15:45Z\". Exclusive. May be omitted if start_range_begin is less than 90 days in the past. Defaults to None.
+        finish_range_begin (str, optional): Session finish times. ISO-8601 UTC time zero offset: \"2022-04-01T15:45Z\". Defaults to None.
+        finish_range_end (str, optional): _description_. Defaults to None.
+        cust_id (int, optional): ISO-8601 UTC time zero offset: \"2022-04-01T15:45Z\". Exclusive. May be omitted if finish_range_begin is less than 90 days in the past. Defaults to None.
+        team_id (int, optional): Include only sessions in which this customer participated. Ignored if team_id is supplied. Defaults to None.
+        series_id (int, optional): Include only sessions in which this team participated. Takes priority over cust_id if both are supplied. Defaults to None.
+        race_week_num (int, optional): Include only sessions for series with this ID. Defaults to None.
+        official_only (bool, optional): Include only sessions with this race week number. Defaults to None.
+        event_types (List[EventType], optional): If true, include only sessions earning championship points. Defaults to all. Defaults to None.
+        category_ids (List[int], optional): Types of events to include in the search. Defaults to all. ?event_types=2,3,4,5. Defaults to None.
+    """
+    params = {}
+    if season_year:
+        params["season_year"] = season_year
+    if season_quarter:
+        params["season_quarter"] = season_quarter
+    if start_range_begin:
+        params["start_range_begin"] = start_range_begin
+    if start_range_end:
+        params["start_range_end"] = start_range_end
+    if finish_range_begin:
+        params["finish_range_begin"] = finish_range_begin
+    if finish_range_end:
+        params["finish_range_end"] = finish_range_end
+    if cust_id:
+        params["cust_id"] = cust_id
+    if team_id:
+        params["team_id"] = team_id
+    if series_id:
+        params["series_id"] = series_id
+    if race_week_num:
+        params["race_week_num"] = race_week_num
+    if official_only:
+        params["official_only"] = official_only
+    if event_types:
+        # Convert event_types to a comma-separated string.
+        str_event_types = ",".join(str(event_type.value) for event_type in event_types)
+        params["event_types"] = str_event_types
+    if category_ids:
+        # Convert category_ids to a comma-separated string.
+        str_category_ids = ",".join(
+            str(category_id.value) for category_id in category_ids
+        )
+        params["category_ids"] = str_category_ids
+    request = requests.Request("GET", SEARCH_SERIES_URL, params=params)
+    return self.send(request).json()
 
-        Args:
-            season_id (int): iRacing Season ID
-            event_type (int, optional): Restrict to one event type: 2 - Practice; 3 - Qualify; 4 - Time Trial; 5 - Race. Defaults to None.
-            race_week_num (int, optional): The first race week of a season is 0. Defaults to None.
-        """
-        params = {"season_id": season_id}
-        if event_type:
-            params["event_type"] = event_type
-        if race_week_num:
-            params["race_week_num"] = race_week_num
-        request = requests.Request("GET", SEASON_RESULTS_URL, params=params)
-        return self.send(request).json()
+
+def get_season_results(
+    self, season_id: int, event_type: EventType = None, race_week_num: int = None
+):
+    """Fetch Results for a Season
+
+    Args:
+        season_id (int): iRacing Season ID
+        event_type (EventType, optional): Restrict to one event type. Defaults to None.
+        race_week_num (int, optional): The first race week of a season is 0. Defaults to None.
+    """
+    params = {"season_id": season_id}
+    if event_type:
+        params["event_type"] = event_type.value
+    if race_week_num:
+        params["race_week_num"] = race_week_num
+    request = requests.Request("GET", SEASON_RESULTS_URL, params=params)
+    return self.send(request).json()
