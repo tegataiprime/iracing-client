@@ -218,6 +218,7 @@
     }
   }
 """  # pylint: disable=line-too-long
+from typing import List
 import requests
 from iracing_client.data import common
 from iracing_client.data.common import IRacingDataObject
@@ -238,6 +239,9 @@ class Results(IRacingDataObject):
     def __init__(self, http_session: requests.Session):
         super().__init__("member", http_session)
 
+    def clear_cache(self):
+        """Clear the cached data"""
+
     def get_result(self, subsession_id: int, include_licenses: bool = False):
         """
         Get the results of a subsession, if authorized to view them.
@@ -254,7 +258,7 @@ class Results(IRacingDataObject):
         request = requests.Request("GET", RESULTS_URL, params=params)
         return self.send(request).json()
 
-    def get_event_log(self, subsession_id: int, simsession_number: int):
+    def get_event_log(self, subsession_id: int, simsession_number: int) -> list:
         """
         iRacing Event Log for a given subsession & simsession
 
@@ -263,14 +267,16 @@ class Results(IRacingDataObject):
             simsession_number (int): The main event is 0; the preceding event is -1, and so on.
 
         Returns:
-            _type_: dict
+            _type_: List # an assembled list of events
         """  # pylint: disable=line-too-long
         params = {
             "subsession_id": subsession_id,
             "simsession_number": simsession_number,
         }
         request = requests.Request("GET", EVENT_LOG_URL, params=params)
-        return self.send(request).json()
+        response = self.send(request)
+        event_data = self.collect_chunks(response)
+        return event_data
 
     def get_lap_chart_data(
         self,

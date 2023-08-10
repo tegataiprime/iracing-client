@@ -9,7 +9,7 @@ first time a property is accessed.  To refresh the data, call the clear_cache() 
 and then access the property again.
 
 Refer to https://members-ng.iracing.com/data/doc for more information.
-""" # pylint: disable=line-too-long
+"""  # pylint: disable=line-too-long
 import requests
 from iracing_client.data.constants import Category, ChartType
 from iracing_client.data import common

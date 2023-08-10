@@ -39,6 +39,7 @@ class EventType(Enum):
     TIME_TRIAL = 4
     RACE = 5
 
+
 class Constants(IRacingDataObject):
     """A class representing iRacing Constants."""
 

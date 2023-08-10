@@ -15,7 +15,7 @@ def test_get_member(member_instance, iracing_member_id):
     member_data = member_instance.get_member(cust_id=iracing_member_id)
     assert member_data
     assert isinstance(member_data, dict)
-    assert member_data['success'] == True
+    assert member_data['success'] is True
     assert member_data['members'][0]['cust_id'] == iracing_member_id
 
 
@@ -24,7 +24,7 @@ def test_get_members(member_instance, iracing_member_id):
     member_data = member_instance.get_members(cust_ids=[iracing_member_id])
     assert member_data
     assert isinstance(member_data, dict)
-    assert member_data['success'] == True
+    assert member_data['success'] is True
     assert member_data['members'][0]['cust_id'] == iracing_member_id
 
 
@@ -43,7 +43,7 @@ def test_get_chart_data_default_cust_id(member_instance):
        chart_type=ChartType.IRATING)
    assert chart_data
    assert isinstance(chart_data, dict)
-   assert chart_data['success'] == True
+   assert chart_data['success'] is True
 
 
 def test_get_chart_data_by_custid(member_instance, iracing_member_id):
@@ -54,7 +54,7 @@ def test_get_chart_data_by_custid(member_instance, iracing_member_id):
        cust_id=530595)
    assert chart_data
    assert isinstance(chart_data, dict)
-   assert chart_data['success'] == True
+   assert chart_data['success'] is True
    assert chart_data['cust_id'] == iracing_member_id
 
 
@@ -77,7 +77,7 @@ def test_get_profile_default_cust_id(member_instance):
     profile = member_instance.get_profile()
     assert profile
     assert isinstance(profile, dict)
-    assert profile['success'] == True
+    assert profile['success'] is True
 
 
 def test_get_profile_by_custid(member_instance, iracing_member_id):
@@ -85,5 +85,5 @@ def test_get_profile_by_custid(member_instance, iracing_member_id):
     profile = member_instance.get_profile(cust_id=530595)
     assert profile
     assert isinstance(profile, dict)
-    assert profile['success'] == True
+    assert profile['success'] is True
     assert profile['cust_id'] == iracing_member_id

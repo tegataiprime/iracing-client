@@ -1,6 +1,7 @@
 """Base classes for iRacing data objects."""
 from abc import ABC, abstractmethod
 import requests
+from typing import List
 
 BASE_URL = "https://members-ng.iracing.com/data/"
 
@@ -75,3 +76,18 @@ class IRacingDataObject(ABC):
         raise IRacingRequestException(
             f"{self.name} failed with status code {response.status_code}"
         )
+
+    def collect_chunks(self, chunk_response: requests.Response) -> list:
+        """Fetch each chunk of data and return the combined data.  Assumes a json response."""
+        data = []
+        response = chunk_response.json()
+        if response["success"] and response["chunk_info"]["num_chunks"] > 0:
+            base_download_url = response["chunk_info"]["base_download_url"]
+            chunk_file_names = response["chunk_info"]["chunk_file_names"]
+            for chunk_file_name in chunk_file_names:
+                chunk_request = requests.Request(
+                    "GET", f"{base_download_url}{chunk_file_name}"
+                )
+                response = self.follow_link(chunk_request)
+                data.extend(response.json())
+        return data

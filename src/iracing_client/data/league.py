@@ -75,7 +75,7 @@ class League(IRacingDataObject):
         upperbound: int = None,
         sort: LeagueSort = LeagueSort.RELEVANCE,
         order: LeagueOrder = LeagueOrder.ASC,
-    ): # pylint: disable=too-many-arguments
+    ):  # pylint: disable=too-many-arguments
         """Lookup the directory of leagues.
 
         Args:

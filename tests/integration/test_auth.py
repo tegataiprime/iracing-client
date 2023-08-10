@@ -1,6 +1,7 @@
 """Test auth module."""
-import iracing_client.auth as auth
 from requests import Session
+import iracing_client.auth as auth
+
 
 def test_login(iracing_username, iracing_password):
     """Test login function."""
