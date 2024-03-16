@@ -2,6 +2,8 @@
 
 [![CodeQL](https://github.com/tegataiprime/iracing-client/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/tegataiprime/iracing-client/actions/workflows/github-code-scanning/codeql)
 
+[![codecov](https://codecov.io/gh/tegataiprime/iracing-client/graph/badge.svg?token=GT18MDGVLJ)](https://codecov.io/gh/tegataiprime/iracing-client)
+
 [![Test Suite](https://github.com/tegataiprime/iracing-client/actions/workflows/test-suite.yaml/badge.svg)](https://github.com/tegataiprime/iracing-client/actions/workflows/test-suite.yaml)
 
 [![Release](https://github.com/tegataiprime/iracing-client/actions/workflows/release.yaml/badge.svg)](https://github.com/tegataiprime/iracing-client/actions/workflows/release.yaml)
