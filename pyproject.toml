@@ -15,7 +15,7 @@ pytest = ">=7.3.2,<9.0.0"
 pylint = ">=2.17.4,<4.0.0"
 black = ">=23.3,<25.0"
 coverage = "^7.2.7"
-pytest-cov = ">=4.1,<6.0"
+pytest-cov = ">=4.1,<7.0"
 
 [tool.pytest.ini_options]
 pythonpath = [
