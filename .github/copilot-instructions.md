@@ -56,6 +56,14 @@ IRACING_MEMBER_ID=<your iRacing Member Id>
 
 ## Testing
 
+### Test-Driven Development (TDD)
+- **All new feature development must begin with a failing test**
+- Write the test first, then implement the feature to make the test pass
+- Follow the Red-Green-Refactor cycle:
+  1. **Red**: Write a failing test that defines the desired behavior
+  2. **Green**: Write the minimum code to make the test pass
+  3. **Refactor**: Improve the code while keeping tests passing
+
 ### Unit Tests
 - Located in `tests/unit/`
 - Mock interactions with iRacing Data API
@@ -125,6 +133,7 @@ IRACING_MEMBER_ID=<your iRacing Member Id>
 - Package management: `poetry-core`
 
 ## Code Review Checklist
+- [ ] New features have tests written first (TDD approach)
 - [ ] Code is formatted with black
 - [ ] Pylint score is ≥ 9.0
 - [ ] Type hints are used appropriately
