@@ -63,10 +63,10 @@ jobs:
       #----------------------------------------------
       # Perform Static Code Analysis
       #----------------------------------------------
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v3
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v3
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_HOST_URL: https://sonarcloud.io
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       #----------------------------------------------
