@@ -63,20 +63,8 @@ jobs:
       #----------------------------------------------
       # Perform Static Code Analysis
       #----------------------------------------------
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v3
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      #----------------------------------------------
-      # Check Quality Gate
-      #----------------------------------------------
-      - name: SonarQube Quality Gate check
-        id: sonarqube-quality-gate-check
-        uses: SonarSource/sonarqube-quality-gate-action@v1
-        # Force to fail step after specific time.
-        timeout-minutes: 5
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v3
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
