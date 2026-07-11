@@ -18,7 +18,7 @@ jobs:
       # Check-out Repo
       #----------------------------------------------
       - name: Check out repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
      
       #----------------------------------------------
       # Initilize Build Environment
@@ -64,7 +64,7 @@ jobs:
       # Perform Static Code Analysis
       #----------------------------------------------
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v7
+        uses: SonarSource/sonarqube-scan-action@v8
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -72,7 +72,7 @@ jobs:
       # CodeCov
       #----------------------------------------------
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v6.0.0
+        uses: codecov/codecov-action@v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: tegataiprime/iracing-client
