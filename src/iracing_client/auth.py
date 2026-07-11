@@ -80,6 +80,7 @@ class AuthenticationException(Exception):
 
 
 AUTH_URL = "https://members-ng.iracing.com/auth"
+AUTH_FORM_URL = "https://members-ng.iracing.com/authenticate"
 
 
 def login(username: str, password: str) -> requests.Session:
@@ -87,6 +88,7 @@ def login(username: str, password: str) -> requests.Session:
     credential_hash = encode_pw(username, password)
     payload = {"email": username, "password": credential_hash}
     http_session = requests.Session()
+
     try:
         response = http_session.post(AUTH_URL, json=payload, timeout=10.0)
     except requests.Timeout as timeout:
@@ -96,6 +98,28 @@ def login(username: str, password: str) -> requests.Session:
 
     if response.status_code == requests.codes.ok: # pylint: disable=no-member
         return http_session
+
+    # iRacing's updated auth flow may reject the JSON endpoint with 405 and
+    # expect form-encoded credentials on /authenticate.
+    if response.status_code == requests.codes.method_not_allowed: # pylint: disable=no-member
+        try:
+            fallback_response = http_session.post(
+                AUTH_FORM_URL,
+                data=payload,
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+                timeout=10.0,
+            )
+        except requests.Timeout as timeout:
+            raise AuthenticationException("Login timed out") from timeout
+        except requests.ConnectionError as connection_error:
+            raise AuthenticationException("Login failed due to connection error") from connection_error
+
+        if fallback_response.status_code == requests.codes.ok: # pylint: disable=no-member
+            return http_session
+
+        raise AuthenticationException(
+            f"Login failed with status code {fallback_response.status_code}"
+        )
 
     raise AuthenticationException(
         f"Login failed with status code {response.status_code}"
