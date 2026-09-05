@@ -1,74 +1,48 @@
 """
-Taken from iRacing Web API Documentation: 
-https://forums.iracing.com/discussion/15068/general-availability-of-data-api/p1
-
 iRacing Web API Authentication
 ------------------------------
 
-In order to access the API, you will need to authenticate. This can be 
-accomplished by making a single POST request to https://members-ng.iracing.com/auth 
-with the email (username) and password fields in the body. 
+Authentication uses the iRacing OAuth 2.0 service.
 
-The value for the PW field is derived using the method described below.
+To obtain OAuth credentials (client_id and client_secret), register an application
+through the iRacing developer portal.
 
-    Submitting Login Credentials
-    ----------------------------
-    With the Season 3 release, currently planned for the week of June 6th,
-    we will be changing how the various /Login and https://members-ng.iracing.com/auth 
-    endpoints expect user credentials to be submitted. 
-    This will affect any 3rd party applications which authenticate with the website, including /data. 
-    The current login endpoints submit the password in plain text over HTTPS (encrypted in transit).
+Credential Encoding
+-------------------
+Both the account password and the OAuth client secret are encoded before submission
+using the same method:
 
-    With the Season 3 release, these endpoints will begin sending the password as a Base64 encoded string 
-    (still transmitted via HTTPS) using the following steps.
+    - Convert the "username" (email or client_id) to lowercase
+    - Concatenate the lowercase username to the end of the credential (password or client_secret)
+    - Create a SHA256 hash of the combined string
+    - Base64-encode the digest
 
-    - Convert the username (email) to lowercase
-    - Concatenate the output from step 1 to the end of the password
-    - Create a SHA256 hash of the output from step 2
-    - Encode the output from step 3 in Base64
-    - Submit the output from step 4 in the password field of the login form
-    
-    Additional Details:
-    This change is a requirement for the new OAuth 2.0 service that is in the works. 
-    While this new method does not improve the security of the password (since it is already 
-    encrypted in transit) this does ensure that the plain text version of the password is 
-    never transmitted off of the device which is authenticating.
+Example:
 
-    Finally, for the avoidance of doubt, the hashed value that is submitted in the password
-    poetyfield is not the value stored in the database for the password.
-
-    Example Python Code
-    -------------------
     import hashlib
     import base64
 
-    username = 'CLunky@iracing.Com'
-    password = 'MyPassWord'
-
     def encode_pw(username, password):
-        initialHash = hashlib.sha256((password + username.lower()).encode('utf-8')).digest()
-        hashInBase64 = base64.b64encode(initialHash).decode('utf-8')
-        return hashInBase64
+        initial_hash = hashlib.sha256(
+            (password + username.lower()).encode('utf-8')
+        ).digest()
+        return base64.b64encode(initial_hash).decode('utf-8')
 
-    pwValueToSubmit = encode_pw(username, password)
-    print(f'{username}\n{pwValueToSubmit}')
+The same function is used to encode the client_secret, substituting client_id
+for username.
 
+OAuth 2.0 Token Request
+-----------------------
+POST https://oauth.iracing.com/oauth2/token
 
-A sample curl script is shown below.
+    Content-Type: application/x-www-form-urlencoded
 
-    EMAIL="john.smith@iracing.com"
-    PASSWORD="SuperSecure123"
+    Form fields: username, password (encoded), grant_type=password_limited,
+    client_id, client_secret (encoded), scope=iracing.auth
 
-    EMAILLOWER=$(echo -n "$EMAIL" | tr [:upper:] [:lower:])
-    ENCODEDPW=$(echo -n $PASSWORD$EMAILLOWER | openssl dgst -binary -sha256 | openssl base64)
-
-    BODY="{\"email\": \"$EMAIL\", \"password\": \"$ENCODEDPW\"}"
-
-    /usr/bin/curl -c cookie-jar.txt -X POST -H 'Content-Type: application/json' --data "$BODY" https://members-ng.iracing.com/auth
-
-The cookie-jar.txt stores the cookies, including the authtoken set during login. You may continue to use the cookie-jar.txt on each 
-subsequent request without needing to re-auth and the authtoken will be automatically refreshed as needed. 
-Please do not re-auth with each request. We see that on a number of the current scrapers hitting the membersite.
+A successful response contains an ``access_token`` which is attached to the
+``requests.Session`` as an ``Authorization: Bearer`` header for all subsequent
+API calls.
 """ # pylint: disable=line-too-long
 import hashlib
 import base64
@@ -79,47 +53,55 @@ class AuthenticationException(Exception):
     """Raised when login fails."""
 
 
-AUTH_URL = "https://members-ng.iracing.com/auth"
-AUTH_FORM_URL = "https://members-ng.iracing.com/authenticate"
+OAUTH_URL = "https://oauth.iracing.com/oauth2/token"
 
 
-def login(username: str, password: str) -> requests.Session:
-    """Login to iRacing and return a requests.Session object."""
+def login(
+    username: str, password: str, client_id: str, client_secret: str
+) -> requests.Session:
+    """Login to iRacing via OAuth 2.0 and return an authenticated requests.Session.
+
+    Args:
+        username (str): iRacing account email address.
+        password (str): iRacing account password (plain text; encoded internally).
+        client_id (str): OAuth application client ID issued by iRacing.
+        client_secret (str): OAuth application client secret (plain text; encoded internally).
+
+    Returns:
+        requests.Session: A session with the ****** set in its Authorization header.
+
+    Raises:
+        AuthenticationException: If login fails for any reason.
+    """
     credential_hash = encode_pw(username, password)
-    payload = {"email": username, "password": credential_hash}
+    client_secret_hash = encode_pw(client_id, client_secret)
+
+    payload = {
+        "username": username,
+        "password": credential_hash,
+        "grant_type": "password_limited",
+        "client_id": client_id,
+        "client_secret": client_secret_hash,
+        "scope": "iracing.auth",
+    }
+
     http_session = requests.Session()
 
     try:
-        response = http_session.post(AUTH_URL, json=payload, timeout=10.0)
+        response = http_session.post(OAUTH_URL, data=payload, timeout=10.0)
     except requests.Timeout as timeout:
         raise AuthenticationException("Login timed out") from timeout
     except requests.ConnectionError as connection_error:
-        raise AuthenticationException("Login failed due to connection error") from connection_error
-
-    if response.status_code == requests.codes.ok: # pylint: disable=no-member
-        return http_session
-
-    # iRacing's updated auth flow may reject the JSON endpoint with 405 and
-    # expect form-encoded credentials on /authenticate.
-    if response.status_code == requests.codes.method_not_allowed: # pylint: disable=no-member
-        try:
-            fallback_response = http_session.post(
-                AUTH_FORM_URL,
-                data=payload,
-                headers={"Content-Type": "application/x-www-form-urlencoded"},
-                timeout=10.0,
-            )
-        except requests.Timeout as timeout:
-            raise AuthenticationException("Login timed out") from timeout
-        except requests.ConnectionError as connection_error:
-            raise AuthenticationException("Login failed due to connection error") from connection_error
-
-        if fallback_response.status_code == requests.codes.ok: # pylint: disable=no-member
-            return http_session
-
         raise AuthenticationException(
-            f"Login failed with status code {fallback_response.status_code}"
-        )
+            "Login failed due to connection error"
+        ) from connection_error
+
+    if response.status_code == requests.codes.ok:  # pylint: disable=no-member
+        token_data = response.json()
+        access_token = token_data.get("access_token")
+        if access_token:
+            http_session.headers.update({"Authorization": f"Bearer {access_token}"})
+            return http_session
 
     raise AuthenticationException(
         f"Login failed with status code {response.status_code}"
@@ -127,7 +109,11 @@ def login(username: str, password: str) -> requests.Session:
 
 
 def encode_pw(username: str, password: str) -> str:
-    """Encode the password to iRacing's specification."""
+    """Encode a credential to iRacing's specification.
+
+    Used for both the account password (with email as username) and the OAuth
+    client secret (with client_id as username).
+    """
     initial_hash = hashlib.sha256((password + username.lower()).encode("utf-8")).digest()
     hash_in_base64 = base64.b64encode(initial_hash).decode("utf-8")
     return hash_in_base64

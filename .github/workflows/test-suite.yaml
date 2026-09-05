@@ -52,6 +52,8 @@ jobs:
           IRACING_USERNAME: ${{ secrets.IRACING_USERNAME }}
           IRACING_PASSWORD: ${{ secrets.IRACING_PASSWORD }}
           IRACING_MEMBER_ID: ${{ secrets.IRACING_MEMBER_ID }}
+          IRACING_CLIENT_ID: ${{ secrets.IRACING_CLIENT_ID }}
+          IRACING_CLIENT_SECRET: ${{ secrets.IRACING_CLIENT_SECRET }}
         run: |
           source .venv/bin/activate
           poetry run pytest --cov-report term --cov-report xml:coverage.xml --cov=iracing_client --cov-append tests/integration || if [ $? -eq 5 ]; then exit 0; fi

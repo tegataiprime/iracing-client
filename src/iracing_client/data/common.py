@@ -43,12 +43,9 @@ class IRacingDataObject(ABC):
                 f"{self.name} failed due to connection error"
             ) from conection_error
 
-        if (
-            response.status_code == requests.codes.ok  # pylint: disable=no-member
-            and response.cookies["authtoken_members"]
-        ):
+        if response.status_code == requests.codes.ok:  # pylint: disable=no-member
             data = response.json()
-            if isinstance(data, dict) and data["link"]:
+            if isinstance(data, dict) and data.get("link"):
                 link_request = requests.Request("GET", data["link"])
                 return self.follow_link(link_request)
             return response
@@ -58,10 +55,16 @@ class IRacingDataObject(ABC):
         )
 
     def follow_link(self, link_request: requests.Request) -> requests.Response:
-        """Follow the link to the data that we requested."""
+        """Follow the link to the data that we requested.
+
+        S3 pre-signed URLs embed authentication in the query string; sending
+        an additional ``Authorization`` header would cause a signature mismatch.
+        A plain GET without session headers is used here to avoid that conflict.
+        """
         try:
-            prepared_request = self.prepare_request(link_request)
-            response = self.http_session.send(prepared_request, timeout=REQUEST_TIMEOUT)
+            response = requests.get(  # pylint: disable=missing-timeout
+                link_request.url, timeout=REQUEST_TIMEOUT
+            )
         except requests.Timeout as timeout:
             raise IRacingRequestException(f"{self.name} timed out") from timeout
         except requests.ConnectionError as conection_error:

@@ -19,16 +19,21 @@ This library provides communiction & error handling with the iRacing Data API.
 JSON formatted data returned by iRacing is deserialized as either a `list` or `dict` using [`json.loads`](https://docs.python.org/3/library/json.html)
 
 ```python
+import os
 import iracing_client.auth as auth
 from iracing_client.data.constants import Constants
 from iracing_client.data.member import Member
 from iracing_client.data.league import League
 
-# Authenticate with iRacing
-iracing_username = os.environ.ge('IRACING_USERNAME')
-iracing_password = os.environ.ge('IRACING_PASSWORD')
+# Authenticate with iRacing using OAuth 2.0 credentials
+# Obtain client_id and client_secret by registering an application
+# through the iRacing developer portal.
+iracing_username = os.environ.get('IRACING_USERNAME')
+iracing_password = os.environ.get('IRACING_PASSWORD')
+iracing_client_id = os.environ.get('IRACING_CLIENT_ID')
+iracing_client_secret = os.environ.get('IRACING_CLIENT_SECRET')
 
-http_session = auth.login(iracing_username, iracing_password)
+http_session = auth.login(iracing_username, iracing_password, iracing_client_id, iracing_client_secret)
 
 
 # iRacing Constants
@@ -92,6 +97,8 @@ When testing locally, provide the following values in a `.env` file in the root 
 IRACING_USERNAME=<your email address>
 IRACING_PASSWORD=<your iRacing password>
 IRACING_MEMBER_ID=<your iRacing Member Id>
+IRACING_CLIENT_ID=<your OAuth client_id>
+IRACING_CLIENT_SECRET=<your OAuth client_secret>
 ```
 
 
