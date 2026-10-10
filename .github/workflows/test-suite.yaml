@@ -21,7 +21,7 @@ jobs:
       # Check-out Repo
       #----------------------------------------------
       - name: Check out repository
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
      
       #----------------------------------------------
       # Initilize Build Environment
@@ -69,7 +69,7 @@ jobs:
       # Perform Static Code Analysis
       #----------------------------------------------
       - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@713881670b6b3676cda39549040e2d88c70d582e
+        uses: SonarSource/sonarqube-scan-action@ba9859eae8dd6bd29e412f25ddbbef3d032000f4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
@@ -77,7 +77,7 @@ jobs:
       # CodeCov
       #----------------------------------------------
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: tegataiprime/iracing-client
