@@ -15,6 +15,16 @@ def iracing_password():
     return os.environ.get('IRACING_PASSWORD')
 
 @pytest.fixture(scope="session")
+def iracing_client_id():
+    """Return the OAuth client_id from an environment variable."""
+    return os.environ.get('IRACING_CLIENT_ID')
+
+@pytest.fixture(scope="session")
+def iracing_client_secret():
+    """Return the OAuth client_secret from an environment variable."""
+    return os.environ.get('IRACING_CLIENT_SECRET')
+
+@pytest.fixture(scope="session")
 def iracing_member_id():
     """Return a member id from an environment variable."""
     iracing_member_id = os.environ.get('IRACING_MEMBER_ID')
@@ -27,7 +37,7 @@ def iracing_member_id():
         return iracing_member_id
 
 @pytest.fixture(scope="session")
-def http_session(iracing_username, iracing_password):
-    """Return a cookiejar."""
-    http_session = auth.login(iracing_username, iracing_password)
+def http_session(iracing_username, iracing_password, iracing_client_id, iracing_client_secret):
+    """Return an authenticated requests.Session."""
+    http_session = auth.login(iracing_username, iracing_password, iracing_client_id, iracing_client_secret)
     return http_session
